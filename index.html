@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenQuiz Japanese Flashcard</title>
-    <!-- Tải thư viện icon giống trong ảnh -->
+    <title>MIMIKARA OBOERU N3 - OpenQuiz Flashcard</title>
+    <!-- Thư viện biểu tượng FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Toàn bộ phông nền tối và căn giữa y như ảnh mẫu */
         body {
             margin: 0;
             padding: 0;
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f0f11;
+            color: #e3e3e6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -23,130 +22,151 @@
             user-select: none;
         }
 
-        /* Khung bao quanh thẻ để tạo hiệu ứng 3D */
+        /* Tiêu đề giáo trình phía trên */
+        .deck-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #66666e;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .counter-text {
+            font-size: 13px;
+            color: #44444a;
+            margin-bottom: 25px;
+        }
+
+        /* Khung bao quanh thẻ tạo hiệu ứng 3D */
         .card-container {
-            width: 550px;
-            height: 320px;
+            width: 580px;
+            height: 340px;
             perspective: 1000px;
             cursor: pointer;
         }
 
-        /* Thẻ Flashcard */
+        /* Thẻ Flashcard chính */
         .card {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.4s ease;
-            border-radius: 20px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Lật thẻ khi có class flipped */
         .card.flipped {
             transform: rotateY(180deg);
         }
 
-        /* Thiết kế chung cho cả mặt trước và mặt sau */
+        /* Thiết kế mặt trước và mặt sau */
         .front, .back {
             position: absolute;
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 20px;
-            background-color: #222222;
-            border: 1px solid #2d2d2d;
+            border-radius: 24px;
+            background-color: #18181c;
+            border: 1px solid #232329;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        /* Mặt sau xoay ngược lại sẵn */
         .back {
             transform: rotateY(180deg);
-            background-color: #1a1a1a;
+            background-color: #131316;
+            border-color: #1f1f24;
         }
 
-        /* Định dạng chữ tiếng Nhật ở giữa */
+        /* Định dạng chữ tiếng Nhật ở giữa mặt trước */
         .word-main {
-            font-size: 46px;
-            font-weight: 600;
+            font-size: 48px;
+            font-weight: 700;
             color: #ffffff;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
 
-        /* Định dạng loại từ và phiên âm nhỏ bên dưới */
         .word-sub {
             font-size: 16px;
-            color: #888888;
+            color: #72727e;
             font-style: italic;
         }
 
         /* Định dạng nghĩa tiếng Việt ở mặt sau */
         .meaning-main {
-            font-size: 32px;
-            color: #4ea8de;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 34px;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
-        .example-text {
-            font-size: 16px;
-            color: #aaaaaa;
+        
+        .example-area {
             text-align: center;
-            max-width: 80%;
-            line-height: 1.5;
+            max-width: 90%;
+            line-height: 1.6;
+        }
+        .example-ja {
+            font-size: 18px;
+            color: #a1a1aa;
+            margin-bottom: 4px;
         }
 
-        /* Các nút Icon bố trí ở 4 góc thẻ như ảnh mẫu */
+        /* Các nút Icon chức năng ở góc */
         .icon-btn {
             position: absolute;
-            color: #666666;
+            color: #4c4c54;
             font-size: 18px;
-            transition: color 0.2s;
-            padding: 10px;
+            transition: color 0.2s, transform 0.1s;
+            padding: 12px;
         }
         .icon-btn:hover {
-            color: #ffffff;
+            color: #9a9a16;
+            transform: scale(1.05);
         }
-        .top-left { top: 20px; left: 25px; }
-        .top-right { top: 20px; right: 25px; }
-        .bottom-left { bottom: 20px; left: 25px; }
-        .bottom-right { bottom: 20px; right: 25px; }
+        .top-left { top: 24px; left: 28px; }
+        .top-right { top: 24px; right: 28px; }
+        .bottom-left { bottom: 24px; left: 28px; }
+        .bottom-right { bottom: 24px; right: 28px; }
 
-        /* Dòng chữ hướng dẫn phím tắt ở dưới cùng */
+        /* Hướng dẫn phím tắt phía dưới */
         .controls-hint {
-            margin-top: 25px;
-            font-size: 13px;
-            color: #555555;
+            margin-top: 35px;
+            font-size: 12px;
+            color: #44444a;
             letter-spacing: 0.5px;
         }
         .key {
-            background-color: #222222;
-            color: #888888;
-            padding: 2px 6px;
-            border-radius: 4px;
+            background-color: #18181c;
+            color: #72727e;
+            padding: 3px 7px;
+            border-radius: 5px;
             font-size: 11px;
-            border: 1px solid #333333;
-            margin: 0 2px;
+            border: 1px solid #232329;
+            margin: 0 3px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <!-- Khung Flashcard bấm vào là lật -->
+    <!-- Tiêu đề bộ thẻ -->
+    <div class="deck-title">Mimikara Oboeru N3</div>
+    <div class="counter-text" id="card-counter">Thẻ 1 / 5</div>
+
+    <!-- Khung Flashcard -->
     <div class="card-container" onclick="toggleFlip()">
         <div class="card" id="flashcard">
             
-            <!-- MẶT TRƯỚC (Giống ảnh mẫu) -->
+            <!-- MẶT TRƯỚC -->
             <div class="front">
                 <div class="icon-btn top-left"><i class="fa-solid fa-sliders"></i></div>
-                <div class="icon-btn top-right"><i class="fa-solid fa-volume-high"></i></div>
+                <div class="icon-btn top-right"><i class="fa-solid fa-star"></i></div>
                 
-                <!-- Nội dung chữ thay đổi tự động bằng Javascript -->
                 <div class="word-main" id="front-text">渇く (かわく)</div>
                 <div class="word-sub" id="front-sub">verb - kawaku</div>
                 
@@ -154,41 +174,40 @@
                 <div class="icon-btn bottom-right"><i class="fa-solid fa-microphone"></i></div>
             </div>
 
-            <!-- MẶT SAU (Hiện giải nghĩa) -->
+            <!-- MẶT SAU -->
             <div class="back">
-                <div class="meaning-main" id="back-meaning">Khát / Khô ráo</div>
-                <div class="example-text" id="back-example">Ví dụ: のどが渇きました (Tôi khát nước).</div>
+                <div class="meaning-main" id="back-meaning">Khát nước, khô nẻ</div>
+                <div class="example-area">
+                    <div class="example-ja" id="back-ex-ja">のどが渇いた。</div>
+                </div>
             </div>
 
         </div>
     </div>
 
-    <!-- Dòng text hướng dẫn phím tắt phía dưới giống ảnh -->
+    <!-- Thanh phím tắt điều hướng -->
     <div class="controls-hint">
-        <span class="key">Space</span> / <span class="key">Enter</span> to flip, 
-        <span class="key">←</span> <span class="key">→</span> to navigate
+        Phím tắt: <span class="key">←</span> <span class="key">→</span> để chuyển thẻ • <span class="key">Space</span> / <span class="key">Enter</span> để lật thẻ
     </div>
 
     <script>
-        // Danh sách từ vựng tiếng Nhật mẫu (Bạn có thể tự thêm từ ở đây)
+        // Dữ liệu từ vựng thực tế lấy từ trang bạn đang xem
         const vocabulary = [
-            { kanji: "渇く (かわく)", sub: "verb - kawaku", meaning: "Khát nước / Khô", example: "のど que 渇きました (Tôi khát nước)." },
-            { kanji: "美味しい (おいしい)", sub: "adj - oishii", meaning: "Ngon miệng", example: "このラーメンは美味しいです (Món mì này ngon)." },
-            { kanji: "勉強する (べんきょうする)", sub: "verb - benkyou suru", meaning: "Học tập", example: "日本語を勉強します (Học tiếng Nhật)." },
-            { kanji: "友達 (ともだち)", sub: "noun - tomodachi", meaning: "Bạn bè", example: "友達と遊びます (Đi chơi với bạn)." }
+            { kanji: "渇く（かわく）", sub: "verb - kawaku", meaning: "Khát nước, khô nẻ", exJa: "のどが渇いた。" },
+            { kanji: "嗅ぐ（かぐ）", sub: "verb - kagu", meaning: "Ngửi", exJa: "花のにおいをかぐ。" },
+            { kanji: "叩く（たたく）", sub: "verb - tataku", meaning: "Vỗ, đánh", exJa: "ドアをたたく。" },
+            { kanji: "殴る（なぐる）", sub: "verb - naguru", meaning: "Đấm", exJa: "けんかして相手をなぐった。" },
+            { kanji: "蹴る（ける）", sub: "verb - keru", meaning: "Đá", exJa: "ボールをける。" }
         ];
 
         let currentIndex = 0;
         const cardElement = document.getElementById('flashcard');
 
-        // Hàm xử lý việc lật thẻ
         function toggleFlip() {
             cardElement.classList.toggle('flipped');
         }
 
-        // Hàm cập nhật nội dung từ mới lên màn hình
         function updateCard() {
-            // Huỷ trạng thái lật về mặt trước trước khi đổi chữ
             cardElement.classList.remove('flipped');
             
             setTimeout(() => {
@@ -196,30 +215,27 @@
                 document.getElementById('front-text').innerText = currentWord.kanji;
                 document.getElementById('front-sub').innerText = currentWord.sub;
                 document.getElementById('back-meaning').innerText = currentWord.meaning;
-                document.getElementById('back-example').innerText = currentWord.example;
-            }, 150); // Chờ 150ms để thẻ xoay lại rồi mới đổi chữ cho mượt
+                document.getElementById('back-ex-ja').innerText = currentWord.exJa;
+                document.getElementById('card-counter').innerText = `Thẻ ${currentIndex + 1} / ${vocabulary.length}`;
+            }, 150);
         }
 
-        // Xử lý bấm nút phát âm thanh bằng giọng đọc máy tính (TTS)
         function speakWord(event) {
-            event.stopPropagation(); // Ngăn việc bấm nút loa bị hiểu nhầm thành lật thẻ
-            const text = vocabulary[currentIndex].kanji.split(' ')[0]; // Chỉ đọc phần chữ chính
+            event.stopPropagation();
+            const text = vocabulary[currentIndex].kanji.split('（')[0];
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ja-JP'; // Đặt ngôn ngữ là tiếng Nhật
+            utterance.lang = 'ja-JP';
             window.speechSynthesis.speak(utterance);
         }
 
-        // Nhận diện phím bấm từ bàn phím máy tính
         document.addEventListener('keydown', function(event) {
             if (event.code === 'Space' || event.key === 'Enter') {
-                event.preventDefault(); // Tránh cuộn trang khi bấm Space
+                event.preventDefault();
                 toggleFlip();
             } else if (event.key === 'ArrowRight') {
-                // Bấm mũi tên phải -> Qua từ tiếp theo
                 currentIndex = (currentIndex + 1) % vocabulary.length;
                 updateCard();
             } else if (event.key === 'ArrowLeft') {
-                // Bấm mũi tên trái -> Quay lại từ trước
                 currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
                 updateCard();
             }
