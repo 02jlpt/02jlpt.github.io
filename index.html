@@ -4,29 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Japanese (日本語 ‼)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Biến màu sắc để làm tính năng Sáng/Tối */
+        :root {
+            --bg-body: #f8f9fc;
+            --bg-nav: #ffffff;
+            --text-main: #333333;
+            --text-muted: #888888;
+            --border-color: #eaeaea;
+            --card-bg: #ffffff;
+            --hover-bg: #f1f1f1;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --bg-nav: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+            --card-bg: #1e1e1e;
+            --hover-bg: #2a2a2a;
+        }
+
         /* Cài đặt cơ bản */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fc;
+            background-color: var(--bg-body);
             margin: 0;
             padding: 0;
-            color: #333;
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Phần Header / Lời chào */
+        /* --- THANH CÔNG CỤ (NAVIGATION BAR) --- */
+        .navbar {
+            background-color: var(--bg-nav);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .navbar a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+        .navbar a:hover {
+            color: #ff4a6b;
+        }
+
+        /* Menu xổ xuống (Dropdown) cho JLPT */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg);
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dropdown-content a:last-child { border-bottom: none; }
+        .dropdown-content a:hover { background-color: var(--hover-bg); }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        /* Nút chức năng (VN/JP, Sáng/Tối) */
+        .tool-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 20px;
+        }
+        .btn-tool {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-tool:hover {
+            background-color: var(--hover-bg);
+        }
+
+        /* --- Phần Header / Lời chào --- */
         .header {
             text-align: center;
-            background-color: #ffffff;
+            background-color: var(--bg-nav);
             padding: 60px 20px;
-            border-bottom: 1px solid #eaeaea;
+            border-bottom: 1px solid var(--border-color);
         }
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
         .header p {
-            color: #888;
+            color: var(--text-muted);
             max-width: 600px;
             margin: 0 auto 30px auto;
             line-height: 1.6;
@@ -45,7 +149,7 @@
             background-color: #e03e5c;
         }
 
-        /* Bố cục nội dung chính */
+        /* --- Bố cục nội dung chính --- */
         .container {
             display: flex;
             max-width: 1100px;
@@ -57,7 +161,7 @@
         /* Cột bài viết bên trái */
         .main-content {
             flex: 2;
-            background: white;
+            background: var(--card-bg);
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
@@ -77,30 +181,32 @@
         .kanji-display {
             font-size: 100px;
             text-align: center;
-            background: #f8f9fc;
+            background: var(--bg-body);
             border-radius: 8px;
             padding: 40px 0;
             margin-bottom: 20px;
+            color: var(--text-main);
         }
         .post-excerpt {
-            color: #555;
+            color: var(--text-muted);
             line-height: 1.8;
             font-size: 0.95rem;
             margin-bottom: 20px;
         }
         .btn-black {
-            background-color: #000;
-            color: white;
+            background-color: var(--text-main);
+            color: var(--bg-nav);
             padding: 10px 20px;
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: bold;
+            border-radius: 3px;
         }
 
         /* Cột bên phải (Sidebar) */
         .sidebar {
             flex: 1;
-            background: white;
+            background: var(--card-bg);
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
@@ -108,35 +214,65 @@
         .sidebar h3 {
             margin-top: 0;
             font-size: 1.1rem;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
         .popular-post-img {
             font-size: 60px;
             text-align: center;
-            background: #f8f9fc;
+            background: var(--bg-body);
             padding: 20px 0;
             border-radius: 4px;
+            color: var(--text-main);
         }
         .popular-post-title {
             font-weight: bold;
             margin: 10px 0 5px 0;
         }
         .popular-post-date {
-            color: #999;
+            color: var(--text-muted);
             font-size: 0.8rem;
         }
 
         /* Responsive cho điện thoại */
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
+            .container { flex-direction: column; }
+            .navbar { padding: 0 15px; overflow-x: auto; }
+            .nav-left { gap: 15px; }
         }
     </style>
 </head>
 <body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="#">ABOUT</a>
+            <a href="#">CONTACT</a>
+            <div class="dropdown">
+                <a href="#">JLPT <i class="fas fa-chevron-down" style="font-size: 10px;"></i></a>
+                <div class="dropdown-content">
+                    <a href="#">N1</a>
+                    <a href="#">N2</a>
+                    <a href="#">N3</a>
+                    <a href="#">N4</a>
+                    <a href="#">N5</a>
+                </div>
+            </div>
+            <a href="#">DOWNLOAD</a>
+        </div>
+        
+        <div class="nav-right">
+            <a href="#" title="Tìm kiếm"><i class="fas fa-search"></i></a>
+            
+            <div class="tool-group">
+                <button class="btn-tool" title="Chuyển ngôn ngữ">VN/JP</button>
+                <button class="btn-tool" id="theme-toggle" title="Giao diện Sáng/Tối">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
     <header class="header">
         <h1>こんにちは !!</h1>
@@ -170,5 +306,22 @@
 
     </div>
 
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        const icon = themeToggleBtn.querySelector('i');
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        });
+    </script>
 </body>
 </html>
