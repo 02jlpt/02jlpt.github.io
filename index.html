@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Tiếng Nhật cùng Flashcard</title>
+    <style>
+        /* Phong cách thiết kế tối giản, hiện đại giống OpenQuiz */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b1329;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #4ea8de;
+        }
+        /* Khung chứa thẻ Flashcard */
+        .flashcard-container {
+            width: 350px;
+            height: 220px;
+            perspective: 1000px; /* Tạo hiệu ứng 3D khi lật */
+            cursor: pointer;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            background-color: #1c2541;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        /* Lật thẻ khi bấm vào */
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Giấu mặt còn lại khi lật */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .front {
+            font-size: 36px;
+            font-weight: bold;
+            color: #64dfdf;
+        }
+        .back {
+            transform: rotateY(180deg);
+            background-color: #3a506b;
+            font-size: 20px;
+            text-align: center;
+        }
+        .furigana {
+            font-size: 18px;
+            color: #bdc3c7;
+            margin-bottom: 10px;
+        }
+        .meaning {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f1c40f;
+            margin-bottom: 10px;
+        }
+        .example {
+            font-size: 15px;
+            color: #ecf0f1;
+            font-style: italic;
+        }
+        .hint {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #5c677d;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Trang Web Học Tiếng Nhật Của Tôi</h1>
+
+    <div class="flashcard-container" onclick="flipCard()">
+        <div class="flashcard" id="card">
+            <div class="front">
+                生産管理
+            </div>
+            <div class="back">
+                <div class="furigana">せいさんかんり (Seisan kanri)</div>
+                <div class="meaning">Quản lý sản xuất</div>
+                <div class="example">Ví dụ: Quản lý tiến độ trong nhà máy.</div>
+            </div>
+        </div>
+    </div>
+
+    <p class="hint">Bấm vào thẻ để xem nghĩa / lật lại</p>
+
+    <script>
+        // Đoạn code JavaScript nhỏ xử lý việc lật thẻ khi click
+        function flipCard() {
+            document.getElementById('card').classList.toggle('flipped');
+        }
+    </script>
+
+</body>
+</html>
