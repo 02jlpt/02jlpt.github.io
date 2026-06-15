@@ -3,118 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học Tiếng Nhật cùng Flashcard</title>
+    <title>OpenQuiz Japanese Flashcard</title>
+    <!-- Tải thư viện icon giống trong ảnh -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Phong cách thiết kế tối giản, hiện đại giống OpenQuiz */
+        /* Toàn bộ phông nền tối và căn giữa y như ảnh mẫu */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0b1329;
-            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            margin: 0;
+            overflow: hidden;
+            user-select: none;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #4ea8de;
-        }
-        /* Khung chứa thẻ Flashcard */
-        .flashcard-container {
-            width: 350px;
-            height: 220px;
-            perspective: 1000px; /* Tạo hiệu ứng 3D khi lật */
+
+        /* Khung bao quanh thẻ để tạo hiệu ứng 3D */
+        .card-container {
+            width: 550px;
+            height: 320px;
+            perspective: 1000px;
             cursor: pointer;
         }
-        .flashcard {
+
+        /* Thẻ Flashcard */
+        .card {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
-            background-color: #1c2541;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: transform 0.4s ease;
+            border-radius: 20px;
         }
-        /* Lật thẻ khi bấm vào */
-        .flashcard.flipped {
+
+        /* Lật thẻ khi có class flipped */
+        .card.flipped {
             transform: rotateY(180deg);
         }
+
+        /* Thiết kế chung cho cả mặt trước và mặt sau */
         .front, .back {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* Giấu mặt còn lại khi lật */
+            backface-visibility: hidden;
+            border-radius: 20px;
+            background-color: #222222;
+            border: 1px solid #2d2d2d;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 15px;
-            padding: 20px;
             box-sizing: border-box;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
-        .front {
-            font-size: 36px;
-            font-weight: bold;
-            color: #64dfdf;
-        }
+
+        /* Mặt sau xoay ngược lại sẵn */
         .back {
             transform: rotateY(180deg);
-            background-color: #3a506b;
-            font-size: 20px;
-            text-align: center;
+            background-color: #1a1a1a;
         }
-        .furigana {
-            font-size: 18px;
-            color: #bdc3c7;
+
+        /* Định dạng chữ tiếng Nhật ở giữa */
+        .word-main {
+            font-size: 46px;
+            font-weight: 600;
+            color: #ffffff;
             margin-bottom: 10px;
+            letter-spacing: 1px;
         }
-        .meaning {
-            font-size: 24px;
-            font-weight: bold;
-            color: #f1c40f;
-            margin-bottom: 10px;
-        }
-        .example {
-            font-size: 15px;
-            color: #ecf0f1;
+
+        /* Định dạng loại từ và phiên âm nhỏ bên dưới */
+        .word-sub {
+            font-size: 16px;
+            color: #888888;
             font-style: italic;
         }
-        .hint {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #5c677d;
+
+        /* Định dạng nghĩa tiếng Việt ở mặt sau */
+        .meaning-main {
+            font-size: 32px;
+            color: #4ea8de;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .example-text {
+            font-size: 16px;
+            color: #aaaaaa;
+            text-align: center;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        /* Các nút Icon bố trí ở 4 góc thẻ như ảnh mẫu */
+        .icon-btn {
+            position: absolute;
+            color: #666666;
+            font-size: 18px;
+            transition: color 0.2s;
+            padding: 10px;
+        }
+        .icon-btn:hover {
+            color: #ffffff;
+        }
+        .top-left { top: 20px; left: 25px; }
+        .top-right { top: 20px; right: 25px; }
+        .bottom-left { bottom: 20px; left: 25px; }
+        .bottom-right { bottom: 20px; right: 25px; }
+
+        /* Dòng chữ hướng dẫn phím tắt ở dưới cùng */
+        .controls-hint {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #555555;
+            letter-spacing: 0.5px;
+        }
+        .key {
+            background-color: #222222;
+            color: #888888;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: 1px solid #333333;
+            margin: 0 2px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Trang Web Học Tiếng Nhật Của Tôi</h1>
-
-    <div class="flashcard-container" onclick="flipCard()">
-        <div class="flashcard" id="card">
+    <!-- Khung Flashcard bấm vào là lật -->
+    <div class="card-container" onclick="toggleFlip()">
+        <div class="card" id="flashcard">
+            
+            <!-- MẶT TRƯỚC (Giống ảnh mẫu) -->
             <div class="front">
-                生産管理
+                <div class="icon-btn top-left"><i class="fa-solid fa-sliders"></i></div>
+                <div class="icon-btn top-right"><i class="fa-solid fa-volume-high"></i></div>
+                
+                <!-- Nội dung chữ thay đổi tự động bằng Javascript -->
+                <div class="word-main" id="front-text">渇く (かわく)</div>
+                <div class="word-sub" id="front-sub">verb - kawaku</div>
+                
+                <div class="icon-btn bottom-left" onclick="speakWord(event)"><i class="fa-solid fa-volume-high"></i></div>
+                <div class="icon-btn bottom-right"><i class="fa-solid fa-microphone"></i></div>
             </div>
+
+            <!-- MẶT SAU (Hiện giải nghĩa) -->
             <div class="back">
-                <div class="furigana">せいさんかんり (Seisan kanri)</div>
-                <div class="meaning">Quản lý sản xuất</div>
-                <div class="example">Ví dụ: Quản lý tiến độ trong nhà máy.</div>
+                <div class="meaning-main" id="back-meaning">Khát / Khô ráo</div>
+                <div class="example-text" id="back-example">Ví dụ: のどが渇きました (Tôi khát nước).</div>
             </div>
+
         </div>
     </div>
 
-    <p class="hint">Bấm vào thẻ để xem nghĩa / lật lại</p>
+    <!-- Dòng text hướng dẫn phím tắt phía dưới giống ảnh -->
+    <div class="controls-hint">
+        <span class="key">Space</span> / <span class="key">Enter</span> to flip, 
+        <span class="key">←</span> <span class="key">→</span> to navigate
+    </div>
 
     <script>
-        // Đoạn code JavaScript nhỏ xử lý việc lật thẻ khi click
-        function flipCard() {
-            document.getElementById('card').classList.toggle('flipped');
-        }
-    </script>
+        // Danh sách từ vựng tiếng Nhật mẫu (Bạn có thể tự thêm từ ở đây)
+        const vocabulary = [
+            { kanji: "渇く (かわく)", sub: "verb - kawaku", meaning: "Khát nước / Khô", example: "のど que 渇きました (Tôi khát nước)." },
+            { kanji: "美味しい (おいしい)", sub: "adj - oishii", meaning: "Ngon miệng", example: "このラーメンは美味しいです (Món mì này ngon)." },
+            { kanji: "勉強する (べんきょうする)", sub: "verb - benkyou suru", meaning: "Học tập", example: "日本語を勉強します (Học tiếng Nhật)." },
+            { kanji: "友達 (ともだち)", sub: "noun - tomodachi", meaning: "Bạn bè", example: "友達と遊びます (Đi chơi với bạn)." }
+        ];
 
+        let currentIndex = 0;
+        const cardElement = document.getElementById('flashcard');
+
+        // Hàm xử lý việc lật thẻ
+        function toggleFlip() {
+            cardElement.classList.toggle('flipped');
+        }
+
+        // Hàm cập nhật nội dung từ mới lên màn hình
+        function updateCard() {
+            // Huỷ trạng thái lật về mặt trước trước khi đổi chữ
+            cardElement.classList.remove('flipped');
+            
+            setTimeout(() => {
+                const currentWord = vocabulary[currentIndex];
+                document.getElementById('front-text').innerText = currentWord.kanji;
+                document.getElementById('front-sub').innerText = currentWord.sub;
+                document.getElementById('back-meaning').innerText = currentWord.meaning;
+                document.getElementById('back-example').innerText = currentWord.example;
+            }, 150); // Chờ 150ms để thẻ xoay lại rồi mới đổi chữ cho mượt
+        }
+
+        // Xử lý bấm nút phát âm thanh bằng giọng đọc máy tính (TTS)
+        function speakWord(event) {
+            event.stopPropagation(); // Ngăn việc bấm nút loa bị hiểu nhầm thành lật thẻ
+            const text = vocabulary[currentIndex].kanji.split(' ')[0]; // Chỉ đọc phần chữ chính
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP'; // Đặt ngôn ngữ là tiếng Nhật
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Nhận diện phím bấm từ bàn phím máy tính
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space' || event.key === 'Enter') {
+                event.preventDefault(); // Tránh cuộn trang khi bấm Space
+                toggleFlip();
+            } else if (event.key === 'ArrowRight') {
+                // Bấm mũi tên phải -> Qua từ tiếp theo
+                currentIndex = (currentIndex + 1) % vocabulary.length;
+                updateCard();
+            } else if (event.key === 'ArrowLeft') {
+                // Bấm mũi tên trái -> Quay lại từ trước
+                currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
+                updateCard();
+            }
+        });
+    </script>
 </body>
 </html>
